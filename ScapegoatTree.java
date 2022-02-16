@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -146,15 +147,22 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> implements Iterab
         // TODO: finish implementing put.
         // If you like you can start from the code for put in BST.java.
         // Read the lab instructions for more hints!
+
+        boolean balance = node.height -1 <= alpha * log2(node.size);
+
         if (cmp < 0) {
-            // key is less than node.key
+            node.left = put(node.left,  key, val);
         } else if (cmp > 0) {
-            // key is greater than node.key
+            node.right = put(node.right, key, val);
         } else {
-            // key is equal to node.key
+            node.val = val;
         }
 
-        throw new UnsupportedOperationException();
+        if (!balance) {
+            rebuild(node);
+        }
+
+        return node;
     }
 
     // Rebuild a tree to make it perfectly balanced.
@@ -177,7 +185,13 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> implements Iterab
     private void inorder(Node node, ArrayList<Node> nodes) {
         // TODO: use in-order traversal to store 'node'
         // and all descendants into 'nodes' ArrayList
-        throw new UnsupportedOperationException();
+
+        if (node == null)
+        return;
+
+        inorder(node.left, nodes);
+        nodes.add(node);
+        inorder(node.right, nodes);
     }
 
     // Given an array of nodes, and two indexes 'lo' and 'hi',
@@ -206,7 +220,19 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> implements Iterab
         // (4) Correctly set the 'size' and 'height' fields for the
         //      node.
         // (5) Return the node!
-        throw new UnsupportedOperationException();
+
+        Node leftChild = balanceNodes(nodes, lo, mid-1);
+        Node rightChild = balanceNodes(nodes, mid+1, hi);
+
+        Node midNode = new Node(nodes.get(mid).key, nodes.get(mid).val);
+
+        midNode.left = leftChild;
+        midNode.right = rightChild;
+
+        midNode.size =  (hi - lo) + 1;
+        midNode.height = (int) (log2((hi-lo)+1) + 1) ;
+
+        return midNode;
     }
 
     // Returns the binary logarithm of a number.
