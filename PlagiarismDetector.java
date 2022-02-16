@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
 import java.util.stream.StreamSupport;
@@ -15,11 +14,11 @@ import java.util.stream.Collectors;
 public class PlagiarismDetector {
 
     public static void main(String[] args) throws IOException {
-        /* // If you don't want to specify arguments on the command-line, just uncomment this block.
+         // If you don't want to specify arguments on the command-line, just uncomment this block.
         if (args.length == 0) {
-            args = new String[] { "documents/small" }; // Path to the document set.
+            args = new String[] { "documents/medium" }; // Path to the document set.
         }
-        */
+
 
         // If no arguments are given, ask for them.
         if (args.length == 0) {
@@ -97,6 +96,43 @@ public class PlagiarismDetector {
     static BST<Ngram, ArrayList<Path>> buildIndex(BST<Path, Ngram[]> files) {
       BST<Ngram, ArrayList<Path>> index = new BST<Ngram, ArrayList<Path>>();
       // TODO: build index of n-grams
+        for (Path path : files) {
+            for (Ngram ngram : files.get(path)) {
+                if(index.containsKey(ngram)) {
+                    index.get(ngram).add(path);
+                }
+                else {
+                    ArrayList<Path> arr = new ArrayList<>();
+                    index.put(ngram, arr);
+                    index.get(ngram).add(path);
+                }
+            }
+        }
+
+        /*for (Path path1: files) {
+            for (Path path2: files) {
+                if (path1.equals(path2))
+                    continue;
+
+                Ngram[] ngrams1 = files.get(path1);
+                Ngram[] ngrams2 = files.get(path2);
+                for (Ngram ngram1: ngrams1) {
+                    ArrayList<Path> ngram1list = new ArrayList<Path>();
+                    ngram1list.add(path1);
+                    for (Ngram ngram2: ngrams2) {
+                        if (ngram1.equals(ngram2)) {
+                            ngram1list.add(path2);
+                            index.put(ngram1, ngram1list);
+                        }
+                    }
+                }
+            }
+        }
+
+
+         */
+
+
       return index;
     }
 
@@ -106,7 +142,29 @@ public class PlagiarismDetector {
         // N.B. Path is Java's class for representing filenames.
         // PathPair represents a pair of Paths (see PathPair.java).
         BST<PathPair, Integer> similarity = new BST<PathPair, Integer>();
-        for (Path path1: files) {
+
+        int count = 1;
+        for (Ngram ngram : index) {
+            if (index.get(ngram).size() > 1) {
+                for (int i = 0; i < index.get(ngram).size(); i++) {
+                    for (int j = i; j < index.get(ngram).size(); j++) {
+                        if (i != j) {
+                            PathPair pair = new PathPair(index.get(ngram).get(i), index.get(ngram).get(j));
+                            if (similarity.containsKey(pair)) {
+                                similarity.put(pair, similarity.get(pair)+1);
+                            } else {
+                                similarity.put(pair, count);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //1(a)    2(a b)   3(c)
+
+
+        /*for (Path path1: files) {
             for (Path path2: files) {
                 if (path1.equals(path2))
                     continue;
@@ -125,6 +183,8 @@ public class PlagiarismDetector {
                 }
             }
         }
+
+         */
 
         return similarity;
     }
