@@ -148,8 +148,6 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> implements Iterab
         // If you like you can start from the code for put in BST.java.
         // Read the lab instructions for more hints!
 
-        boolean balance = node.height -1 <= alpha * log2(node.size);
-
         if (cmp < 0) {
             node.left = put(node.left,  key, val);
         } else if (cmp > 0) {
@@ -158,8 +156,13 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> implements Iterab
             node.val = val;
         }
 
+        node.height = 1 + Math.max(height(node.left), height(node.right));
+        node.size = 1 + size(node.left) + size(node.right);
+
+        boolean balance = node.height -1 <= alpha * log2(node.size);
+
         if (!balance) {
-            rebuild(node);
+            node= rebuild(node);
         }
 
         return node;
@@ -229,8 +232,8 @@ public class ScapegoatTree<Key extends Comparable<Key>, Value> implements Iterab
         midNode.left = leftChild;
         midNode.right = rightChild;
 
-        midNode.size =  (hi - lo) + 1;
-        midNode.height = (int) (log2((hi-lo)+1) + 1) ;
+        midNode.size =  1 + size(midNode.left) + size(midNode.right);
+        midNode.height = 1 + Math.max(height(midNode.left), height(midNode.right));
 
         return midNode;
     }

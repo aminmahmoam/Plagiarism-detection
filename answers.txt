@@ -3,9 +3,9 @@
 ******************************************************************************/
 
 Group members:
-- [...]
-- [...]
-- [...]
+- Faiza Amjad
+- Yasamin Fazelidehkordi
+- Amin Mahmoudifard
 
 /******************************************************************************
 ** Task 1: Analyzing the slow program
@@ -17,7 +17,14 @@ Group members:
 **    Explain briefly.
 ******************************************************************************/
 
-[...]
+The complexity is O(N^2).
+
+The complexity of the first for_loop and the second for loop is individually O(D). So, in total the complexity of these two
+loops is O(D^2). The complexity of all statements(functions) before the third for loop is O(1). The complexity of the third
+and fourth for_loops is individually O(K) which, makes them to have the complexity of O(K^2) in total.
+Moreover, the complexity of making path pair is O(1) and although the complexity of similarity.containsKey
+is greater than O(1), it is still in order of O(K^2). Therefore, the complexity of the whole method would be O(D^2 * K^2)
+which is equal to O((DK)^2) and since D*K = N, the final complexity of the method would be O(N^2).
 
 /******************************************************************************
 ** 2. How long did the program take on the 'small' and 'medium' directories?
@@ -25,14 +32,20 @@ Group members:
 **    given the asymptotic complexity? Explain very briefly why.
 ******************************************************************************/
 
-[...]
+For small directory: 2,02 seconds
+For medium directory: 314,70 seconds
+
+Based on the asymptotic complexity we calculated, since the small directory has 20000 Ngrams and the medium has 200000 Ngrams,
+the ratio between the times we expected is 10^2=100. However, the actual ratio is 155,79 which is higher than 100. The difference
+is because medium directory has more plagiarised text than the small directory.
 
 /******************************************************************************
 ** 3. How long do you predict the program would take to run on
 **    the 'huge' directory? Show your calculations.
 ******************************************************************************/
 
-[...]
+Huge directory has 4000000 Ngrams which is 20 times bigger than the numbers of Ngrams in medium directory. So, based on the
+asymptotic complexity we expect that the runtime for huge directory would be (20^2 * 314,70) which is equal to 125880 seconds.
 
 /******************************************************************************
 ** Task 2: Using an index
@@ -41,7 +54,11 @@ Group members:
 **    Say very briefly how you deduced this.
 ******************************************************************************/
 
-[...]
+Files and similarity BSTs become unbalanced.
+
+For files the order of growth of height in terms of size is not logarithmic. For example, having a tree of size and height
+of 7, shows that we have one node in each level of our tree and the tree grows in one side which is the worst possible case.
+The same for similarity BST, the order of growth of height based on size is not logarithmic and the tree becomes unbalanced.
 
 /******************************************************************************
 ** 5 (optional). Is there a simple way to stop these trees becoming unbalanced?
@@ -57,7 +74,17 @@ Group members:
 **    and a constant number of duplicate occurrences of 5-grams.
 ******************************************************************************/
 
-[...]
+BuildIndex: O(Nlog(N))
+The complexity of the first for_loop is D and the complexity of the second for_loop is K. The complexity of getting an
+element from scapegoat tree is O(log(N)) in the if statement. Also in the else statement, the complexity of insertion in scapegoat
+tree is also O(log(N)). Since, either of these two statements are going to be executed, at last we will have the complexity
+of O(D*K*log(N)) which is equal to O(Nlog(N)).
+
+FindSimilarity: O(Nlog(N))
+The complexity of first two for_loops is O(N) in total because we are going through all the Ngrams and their paths.
+The complexity of insertion in scapegoat tree is O(log(N)) and because in either of if or else statements we are putting
+new elements to our tree, in total we are going to have the complexity of O(log(N)) for the third for_loop.
+Therefore, the final complexity of the method is O(Nlog(N)).
 
 /******************************************************************************
 ** 7 (optional). What if the total similarity score is an arbitrary number S,
@@ -72,15 +99,15 @@ Group members:
 ** A. Approximately how many hours did you spend on the assignment?
 ******************************************************************************/
 
-[..group member..]:  [..hours..]
-[..group member..]:  [..hours..]
-[..group member..]:  [..hours..]
+Amin Mahmoudifard:  11 hours
+Yasamin Fazelidehkordi:  12 hours
+Faiza Amjad:  10,5 hours
 
 /******************************************************************************
 ** B. Are there any known bugs / limitations?
 ******************************************************************************/
 
-[...]
+No.
 
 /******************************************************************************
 ** C. Did you collaborate with any other students on this lab?
@@ -89,13 +116,14 @@ Group members:
 **    may have used in creating your design.
 ******************************************************************************/
 
-[...]
+Yes. We discussed the complexity of our final versions of methods with one another group via zoom.
 
 /******************************************************************************
 ** D. Describe any serious problems you encountered.                    
 ******************************************************************************/
 
-[...]
+We could not find the problem in scapegoat tree class which led to inconsistency of height. but we solved that by getting
+help from on of the TAs.
 
 /******************************************************************************
 ** E. List any other comments here.

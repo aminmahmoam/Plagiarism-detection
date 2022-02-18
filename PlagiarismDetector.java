@@ -16,7 +16,7 @@ public class PlagiarismDetector {
     public static void main(String[] args) throws IOException {
          // If you don't want to specify arguments on the command-line, just uncomment this block.
         if (args.length == 0) {
-            args = new String[] { "documents/small" }; // Path to the document set.
+            args = new String[] { "documents/huge" }; // Path to the document set.
         }
 
 
@@ -94,7 +94,7 @@ public class PlagiarismDetector {
 
     // Phase 2: Build index of n-grams (not implemented yet).
     static ScapegoatTree<Ngram, ArrayList<Path>> buildIndex(ScapegoatTree<Path, Ngram[]> files) {
-      ScapegoatTree<Ngram, ArrayList<Path>> index = new ScapegoatTree<Ngram, ArrayList<Path>>();
+        ScapegoatTree<Ngram, ArrayList<Path>> index = new ScapegoatTree<Ngram, ArrayList<Path>>();
       // TODO: build index of n-grams
         for (Path path : files) {
             for (Ngram ngram : files.get(path)) {
